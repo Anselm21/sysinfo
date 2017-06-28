@@ -5,7 +5,7 @@ import threading
 
 class ThreadSys(object):
 
-    def __init__(self, interval=1):
+    def __init__(self, socket, interval=1):
         """ Constructor
         :type interval: int
         :param interval: Check sys params interval, in seconds
@@ -18,6 +18,7 @@ class ThreadSys(object):
         self.cpu_used = 0
         self.memory_total = 0
         self.memory_used = 0
+        self.socket_io = socket
 
         thread = threading.Thread(target=self.run, args=())
         thread.daemon = True
@@ -38,6 +39,9 @@ class ThreadSys(object):
         network = psutil.net_io_counters()
         return {'bytes_sent': network.bytes_sent, 'bytes_recv': network.bytes_recv}
 
+    def some(self):
+        self.socket_io.emit('some_event', {'data': 42})
+
     def run(self):
         """ Get sys info with 1s period """
         while True:
@@ -53,7 +57,7 @@ class ThreadSys(object):
 
             if self.rx_prev > 0:
                 self.rx_speed = self.bytes_to_mb(rx - self.rx_prev)
-
+            self.some()
             time.sleep(self.interval)
 
             self.tx_prev = tx

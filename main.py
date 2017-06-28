@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify
 # from tensorflow.python.client import device_lib
 from thread_sys import ThreadSys
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
-sys_info = ThreadSys()
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
+sys_info = ThreadSys(socketio)
 
 
 @app.route('/')
@@ -28,6 +31,6 @@ def entry_page():
 #     return len(gpus)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
 
 
