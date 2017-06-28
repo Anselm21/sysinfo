@@ -1,3 +1,4 @@
 flask==0.12.2
 psutil==5.2.2
 tensorflow==1.2.0
+flask-socketio==2.9.0
