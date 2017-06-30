@@ -1,6 +1,7 @@
 import psutil
 import time
 import threading
+import config
 
 
 class ThreadSys(object):
@@ -64,5 +65,6 @@ class ThreadSys(object):
             'memory_used': self.memory_used,
             'cpu_used': self.cpu_used,
             'rx_speed': self.rx_speed,
-            'tx_speed': self.tx_speed
+            'tx_speed': self.tx_speed,
+            'server_name': config.SERVER_NAME
         }

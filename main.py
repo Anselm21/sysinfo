@@ -14,7 +14,8 @@ def background_thread():
     """Send server info to client with time interval."""
     while True:
         socketio.sleep(3)
-        socketio.send(sys_info.get_info())
+        data = sys_info.get_info()
+        socketio.send(data)
 
 
 @socketio.on('connect')
