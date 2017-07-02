@@ -27,12 +27,12 @@ class ThreadSys(object):
     @staticmethod
     def bytes_to_mb(bts):
         mb = bts / 1048576
-        return "{0:0.1f}".format(mb)
+        return float("{0:0.1f}".format(mb))
 
     @staticmethod
     def bytes_to_gib(bts):
         gib = bts / 1073741824
-        return "{0:0.1f}".format(gib)
+        return float("{0:0.1f}".format(gib))
 
     @staticmethod
     def get_bytes():
@@ -66,5 +66,6 @@ class ThreadSys(object):
             'cpu_used': self.cpu_used,
             'rx_speed': self.rx_speed,
             'tx_speed': self.tx_speed,
-            'server_name': config.SERVER_NAME
+            'server_name': config.SERVER_NAME,
+            'time': time.strftime("%H:%M:%S", time.gmtime())
         }
