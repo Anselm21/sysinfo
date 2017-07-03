@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 # from tensorflow.python.client import device_lib
 from thread_sys import ThreadSys
 from flask_socketio import SocketIO, send
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 thread = None
@@ -18,11 +20,11 @@ def background_thread():
         socketio.send(data)
 
 
-@socketio.on('connect')
-def on_connect():
-    global thread
-    if thread is None:
-        thread = socketio.start_background_task(target=background_thread)
+# @socketio.on('connect')
+# def on_connect():
+#     global thread
+#     if thread is None:
+#         thread = socketio.start_background_task(target=background_thread)
 
 
 @app.route('/')
@@ -40,6 +42,16 @@ def entry_page():
     RX_SPEED: {} Mbps
     TX_SPEED: {} Mbps""".format(cpu_used, memory_total, memory_used, rx_speed, tx_speed)
 
+
+@app.route('/info')
+def info():
+    data = {'cpu_used': sys_info.cpu_used,
+            'memory_total': sys_info.memory_total,
+            'memory_used': sys_info.memory_used,
+            'rx_speed': sys_info.rx_speed,
+            'tx_speed': sys_info.tx_speed}
+    return jsonify(data)
+
 #
 # def get_available_gpus():
 #     local_device_protos = device_lib.list_local_devices()
@@ -47,6 +59,6 @@ def entry_page():
 #     return len(gpus)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, port=5000)
 
 
