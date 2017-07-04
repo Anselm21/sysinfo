@@ -1,30 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS
-# from tensorflow.python.client import device_lib
 from thread_sys import ThreadSys
-from flask_socketio import SocketIO, send
 
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
-thread = None
 sys_info = ThreadSys()
-
-
-def background_thread():
-    """Send server info to client with time interval."""
-    while True:
-        socketio.sleep(5)
-        data = sys_info.get_info()
-        socketio.send(data)
-
-
-# @socketio.on('connect')
-# def on_connect():
-#     global thread
-#     if thread is None:
-#         thread = socketio.start_background_task(target=background_thread)
 
 
 @app.route('/')
@@ -59,6 +40,6 @@ def info():
 #     return len(gpus)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=5000)
+    app.run(debug=True, port=5000)
 
 
