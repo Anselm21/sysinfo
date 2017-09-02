@@ -5,11 +5,11 @@ from thread_sys import ThreadSys
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
-sys_info = ThreadSys()
 
 
 @app.route('/')
 def entry_page():
+    sys_info = ThreadSys()
     cpu_used = sys_info.cpu_used
     memory_total = sys_info.memory_total
     memory_used = sys_info.memory_used
@@ -26,6 +26,7 @@ def entry_page():
 
 @app.route('/info')
 def info():
+    sys_info = ThreadSys()
     data = {'cpu_used': sys_info.cpu_used,
             'memory_total': sys_info.memory_total,
             'memory_used': sys_info.memory_used,
