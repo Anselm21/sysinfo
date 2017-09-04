@@ -5,7 +5,7 @@ PreInstall for openSUSE:
     zypper refresh
     zypper update
     zypper install gcc
-    sudo zypper install python-pip python-setuptools python-wheel
+    zypper install python-pip python-setuptools python-wheel
     zypper install apache2-devel
     pip install mod_wsgi
 
