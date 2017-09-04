@@ -1,9 +1,18 @@
-Script to gather system CPU and Network stats
+Script to gather system CPU, Memory and Network stats.
 
-Install&Run:
- git clone ...
- cd sysinfo
- python3 -m venv venv
- source venv/bin/activate
- pip install -r requirements.txt
- python3 main.py
+PreInstall for openSUSE:
+    sudo -i
+    zypper refresh
+    zypper update
+    zypper install gcc
+    sudo zypper install python-pip python-setuptools python-wheel
+    zypper install apache2-devel
+    pip install mod_wsgi
+
+Install:
+    git clone ...
+    cd sysinfo
+    pip install -r requirements.txt
+ 
+Run:
+    mod_wsgi-express start-server sysinfo.wsgi —port=5000
