@@ -29,7 +29,7 @@ class ThreadSys(object):
     @staticmethod
     def bytes_to_mb(bts):
         mb = bts / 1048576
-        return float("{0:0.1f}".format(mb))
+        return float("{0:.2f}".format(mb))
 
     @staticmethod
     def bytes_to_gib(bts):
@@ -41,10 +41,13 @@ class ThreadSys(object):
         gib = mb / 1024
         return float("{0:0.1f}".format(gib))
 
-    # @staticmethod
-    # def get_bytes():
-    #     network = psutil.net_io_counters()
-    #     return {'bytes_sent': network.bytes_sent, 'bytes_recv': network.bytes_recv}
+    @staticmethod
+    def get_network_bytes(interface):
+        for line in open('/proc/net/dev', 'r'):
+            if interface in line:
+                data = line.split('%s:' % interface)[1].split()
+                rx_bytes, tx_bytes = (data[0], data[8])
+                return (int(rx_bytes), int(tx_bytes))
 
     def get_cpu(self):
         f = open("/proc/stat", "r")
@@ -68,16 +71,19 @@ class ThreadSys(object):
     def run(self):
         """ Get sys info with 1s period """
         while True:
+            try:
+                rx, tx = self.get_network_bytes('eth0')
+            except:
+                rx = 0
+                tx = 0
             tot_m, used_m, free_m = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
             self.cpu_used = self.get_cpu()
             self.memory_total = self.mb_to_gib(tot_m)
             self.memory_used = self.mb_to_gib(used_m)
-            tx = 0
-            rx = 0
-            if self.tx_prev > 0:
-                self.tx_speed = 0
-            if self.rx_prev > 0:
-                self.rx_speed = 0
+            if int(self.tx_prev) > 0:
+                self.tx_speed = self.bytes_to_mb(tx - self.tx_prev)
+            if int(self.rx_prev) > 0:
+                self.rx_speed = self.bytes_to_mb(rx - self.rx_prev)
             time.sleep(self.interval)
             self.tx_prev = tx
             self.rx_prev = rx
