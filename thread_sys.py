@@ -1,9 +1,7 @@
-import psutil
 import time
 import threading
 import config
 import os
-import decimal,timeit
 
 
 class ThreadSys(object):
@@ -43,10 +41,10 @@ class ThreadSys(object):
         gib = mb / 1024
         return float("{0:0.1f}".format(gib))
 
-    @staticmethod
-    def get_bytes():
-        network = psutil.net_io_counters()
-        return {'bytes_sent': network.bytes_sent, 'bytes_recv': network.bytes_recv}
+    # @staticmethod
+    # def get_bytes():
+    #     network = psutil.net_io_counters()
+    #     return {'bytes_sent': network.bytes_sent, 'bytes_recv': network.bytes_recv}
 
     def get_cpu(self):
         f = open("/proc/stat", "r")
@@ -74,16 +72,13 @@ class ThreadSys(object):
             self.cpu_used = self.get_cpu()
             self.memory_total = self.mb_to_gib(tot_m)
             self.memory_used = self.mb_to_gib(used_m)
-            tx = self.get_bytes()['bytes_sent']
-            rx = self.get_bytes()['bytes_recv']
-
+            tx = 0
+            rx = 0
             if self.tx_prev > 0:
-                self.tx_speed = self.bytes_to_mb(tx - self.tx_prev)
-
+                self.tx_speed = 0
             if self.rx_prev > 0:
-                self.rx_speed = self.bytes_to_mb(rx - self.rx_prev)
+                self.rx_speed = 0
             time.sleep(self.interval)
-
             self.tx_prev = tx
             self.rx_prev = rx
 
